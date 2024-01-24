@@ -38,10 +38,8 @@ app.set('trust proxy', true); // trust first proxy
 
 // Ruta de whatsapp
 
-app.use('/api/whatsapp', webhookRoutes);
+app.use('/api/preguntas', preguntas);
 
-
-app.use('/api/mail', mailerRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {
