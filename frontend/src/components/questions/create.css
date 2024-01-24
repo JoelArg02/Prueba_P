@@ -1,0 +1,28 @@
+/* Agrega esto en tu archivo CSS */
+
+.card {
+    margin-top: 20px;
+    border-radius: 10px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .modal-content {
+    border-radius: 10px;
+  }
+  
+  /* Estilo para las opciones */
+  #opciones-container div {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  #opciones-container div:hover {
+    background-color: #f8f9fa;
+  }
+  

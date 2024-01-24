@@ -7,8 +7,8 @@ const port = 5200;
 
 
 // Suponiendo que tienes estos archivos y rutas correctamente definidos
-const preguntas = require('./routes/preguntasRoutes.js');
-
+// const preguntas = require('./routes/preguntasRoutes.js');
+const pruebas = require('./routes/pruebasRoutes.js');
 
 // Configuración de CORS para permitir solicitudes de cualquier origen
 app.use(cors({
@@ -38,9 +38,11 @@ app.set('trust proxy', true); // trust first proxy
 
 // Ruta de whatsapp
 
-app.use('/api/preguntas', preguntas);
+// app.use('/api/preguntas', preguntas);
 
+// Ruta para pruebas
 
+app.use('/api/pruebas', pruebas);
 // Manejo de errores
 app.use((err, req, res, next) => {
   console.error(err.stack);
