@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Form, Button, Modal, Card } from "react-bootstrap";
 import "./create.css";
+import { createPrueba } from "../../api/pruebas";
+import { crearPreguntas } from "../../api/preguntas";
 function CrearPrueba() {
   const [showModal, setShowModal] = useState(false);
   const [numeroPreguntas, setNumeroPreguntas] = useState(0);
   const [preguntas, setPreguntas] = useState([]);
+  const [duracion, setDuracion] = useState(0);
+  const [fechaInicio, setFechaInicio] = useState("");
   const [preguntaActual, setPreguntaActual] = useState({
     enunciado: "",
     opciones: [],
@@ -37,9 +41,38 @@ function CrearPrueba() {
     });
   };
 
-  const handleCrearPrueba = (e) => {
+  const handleCrearPrueba = async (e) => {
     e.preventDefault();
-    console.log("Prueba Creada", preguntas);
+
+    try {
+      console.log(numeroPreguntas, duracion, fechaInicio);
+      const pruebaResponse = await createPrueba({
+        numero_preguntas: numeroPreguntas,
+        duracion: duracion,
+        fecha_inicio: fechaInicio,
+      });
+      console.log(pruebaResponse);
+      const pruebaId = pruebaResponse.id_prueba;
+      console.log("Se imprime pruebaId", pruebaId);
+
+      for (let pregunta of preguntas) {
+        try {
+          console.log("Se imprime pregunta", pregunta);
+          await crearPreguntas({
+            id_prueba: pruebaId,
+            enunciado: pregunta.enunciado,
+            opciones: pregunta.opciones,
+            respuesta_correcta: pregunta.respuestaCorrecta,
+          });
+        } catch (errorPregunta) {
+          console.error("Error al crear pregunta", errorPregunta);
+        }
+      }
+
+      console.log("Prueba y preguntas creadas con éxito");
+    } catch (error) {
+      console.error("Error al crear prueba y preguntas", error);
+    }
   };
 
   return (
@@ -61,12 +94,22 @@ function CrearPrueba() {
 
               <Form.Group>
                 <Form.Label>Duración de la Prueba (en horas):</Form.Label>
-                <Form.Control type="number" required />
+                <Form.Control
+                  type="number"
+                  value={duracion}
+                  onChange={(e) => setDuracion(Number(e.target.value))}
+                  required
+                />
               </Form.Group>
 
               <Form.Group>
                 <Form.Label>Fecha de Inicio:</Form.Label>
-                <Form.Control type="datetime-local" required />
+                <Form.Control
+                  type="datetime-local"
+                  value={fechaInicio}
+                  onChange={(e) => setFechaInicio(e.target.value)}
+                  required
+                />
               </Form.Group>
 
               <div id="preguntas-container">

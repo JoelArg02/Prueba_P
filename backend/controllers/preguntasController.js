@@ -19,10 +19,9 @@ exports.createPregunta = (req, res) => {
       console.error(err);
       return res.status(500).json({ error: "Error al crear la pregunta." });
     }
-    return res.status(201).json(result.rows[0]);
+    return res.status(200).json({ message: "Pregunta creada exitosamente." });
   });
 };
-
 
 exports.getPreguntaByIdPrueba = (req, res) => {
   const id = req.params.id;

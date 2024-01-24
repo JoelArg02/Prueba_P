@@ -12,11 +12,13 @@ exports.getPruebas = (req, res) => {
 
 exports.createPrueba = (req, res) => {
   const pruebaData = req.body; // Obtener los datos del cuerpo de la solicitud
-  Prueba.crearPrueba(pruebaData, (err, result) => {
+
+  Prueba.crearPrueba(pruebaData, (err, pruebaId) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: "Error al crear la prueba." });
     }
-    return res.status(201).json(result.rows[0]);
+    // Devuelve el id_prueba en la respuesta
+    return res.status(201).json({ id_prueba: pruebaId });
   });
 };

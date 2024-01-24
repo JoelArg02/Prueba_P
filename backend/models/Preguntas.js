@@ -20,21 +20,42 @@ Preguntas.getPreguntaByIdPrueba = (id, callback) => {
 };
 
 Preguntas.createPregunta = (preguntaData, callback) => {
+  console.log("Datos recibidos para crear pregunta:", preguntaData);
+
+  // Convertir id_prueba y respuesta_correcta a enteros
+  const id_prueba = parseInt(preguntaData.id_prueba, 10);
+  const respuesta_correcta = parseInt(preguntaData.respuesta_correcta, 10);
+
+  // Verifica si id_prueba o respuesta_correcta no son números válidos
+  if (isNaN(id_prueba) || isNaN(respuesta_correcta)) {
+    return callback(
+      "id_prueba o respuesta_correcta no son números válidos",
+      null
+    );
+  }
+
   const query = `
     INSERT INTO preguntas (id_prueba, enunciado, opciones, respuesta_correcta)
     VALUES ($1, $2, $3, $4)
     RETURNING *;
   `;
 
-  const { id_prueba, pregunta, respuesta, opciones } = preguntaData;
+  const valores = [
+    id_prueba,
+    preguntaData.enunciado,
+    preguntaData.opciones,
+    respuesta_correcta,
+  ];
 
-  const respuesta_correcta = parseInt(respuesta);
+  console.log("Valores para la inserción de la pregunta:", valores);
 
-  poolc.query(
-    query,
-    [id_prueba, pregunta, opciones, respuesta_correcta],
-    callback
-  );
+  poolc.query(query, valores, (error, results) => {
+    if (error) {
+      callback(error, null);
+    } else {
+      callback(null, results.rows[0]);
+    }
+  });
 };
 
 module.exports = Preguntas;

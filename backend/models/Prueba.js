@@ -11,13 +11,21 @@
   }
 
   Prueba.crearPrueba = (pruebaData, callback) => {
-      const query = `
+    
+    const query = `
       INSERT INTO pruebas (numero_preguntas, duracion, fecha_inicio)
       VALUES ($1, $2, $3)
-      RETURNING *;
-    `;	
+      RETURNING id_prueba;
+    `;
     const { numero_preguntas, duracion, fecha_inicio } = pruebaData;
-    poolc.query(query, [numero_preguntas, duracion, fecha_inicio], callback);
+    poolc.query(query, [numero_preguntas, duracion, fecha_inicio], (error, results) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        callback(null, results.rows[0].id_prueba); 
+      }
+    });
   };
+  
 
   module.exports = Prueba;
