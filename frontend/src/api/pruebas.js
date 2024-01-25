@@ -21,4 +21,39 @@ const createPrueba = async (prueba) => {
     throw error;
   }
 };
-export { getPruebas,createPrueba };
+
+const editPrueba = async (id, prueba) => {
+  try {
+    const response = await axios.put(
+      `${apiConfig.baseURL}/pruebas/editar/${id}`,
+      prueba
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deletePruebaBoolean = async (id) => {
+  try {
+    const response = await axios.put(
+      `${apiConfig.baseURL}/pruebas/estado/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const deletePrueba = async (id) => {
+  try {
+    const response = await axios.delete(
+      `${apiConfig.baseURL}/pruebas/eliminar/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { getPruebas, createPrueba, editPrueba, deletePrueba, deletePruebaBoolean };

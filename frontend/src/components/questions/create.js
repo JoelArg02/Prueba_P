@@ -3,12 +3,15 @@ import { Form, Button, Modal, Card } from "react-bootstrap";
 import "./create.css";
 import { createPrueba } from "../../api/pruebas";
 import { crearPreguntas } from "../../api/preguntas";
+import LoadingComponent from "../general/loading";
+
 function CrearPrueba() {
   const [showModal, setShowModal] = useState(false);
+  const [fechaInicio, setFechaInicio] = useState(getFechaHoraActual());
   const [numeroPreguntas, setNumeroPreguntas] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [preguntas, setPreguntas] = useState([]);
   const [duracion, setDuracion] = useState(0);
-  const [fechaInicio, setFechaInicio] = useState("");
   const [preguntaActual, setPreguntaActual] = useState({
     enunciado: "",
     opciones: [],
@@ -45,6 +48,7 @@ function CrearPrueba() {
     e.preventDefault();
 
     try {
+      setLoading(true);
       console.log(numeroPreguntas, duracion, fechaInicio);
       const pruebaResponse = await createPrueba({
         numero_preguntas: numeroPreguntas,
@@ -68,17 +72,32 @@ function CrearPrueba() {
           console.error("Error al crear pregunta", errorPregunta);
         }
       }
-
+      setLoading(false);
       console.log("Prueba y preguntas creadas con éxito");
     } catch (error) {
+      setLoading(false);
       console.error("Error al crear prueba y preguntas", error);
     }
   };
 
+  function getFechaHoraActual() {
+    const ahora = new Date();
+    const año = ahora.getFullYear();
+    const mes = (ahora.getMonth() + 1).toString().padStart(2, "0"); // getMonth() devuelve un índice basado en 0
+    const dia = ahora.getDate().toString().padStart(2, "0");
+    const horas = ahora.getHours().toString().padStart(2, "0");
+    const minutos = ahora.getMinutes().toString().padStart(2, "0");
+
+    return `${año}-${mes}-${dia}T${horas}:${minutos}`;
+  }
+  if (loading) {
+    return <LoadingComponent />;
+  }
+
   return (
     <>
-      <div className="d-flex justify-content-center mt-4">
-        <Card style={{ width: "75%" }} className="shadow">
+      <div className="crear-prueba-container">
+        <Card className="shadow-sm mb-4">
           <Card.Body>
             <Card.Title>Formulario de Creación de Prueba</Card.Title>
             <Form onSubmit={handleCrearPrueba}>
@@ -86,8 +105,14 @@ function CrearPrueba() {
                 <Form.Label>Número de Preguntas:</Form.Label>
                 <Form.Control
                   type="number"
+                  className="input-sin-flechas"
                   value={numeroPreguntas}
-                  onChange={(e) => setNumeroPreguntas(Number(e.target.value))}
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    setNumeroPreguntas(
+                      valor === "" ? "" : Math.max(1, Number(valor))
+                    );
+                  }}
                   required
                 />
               </Form.Group>
@@ -96,8 +121,12 @@ function CrearPrueba() {
                 <Form.Label>Duración de la Prueba (en horas):</Form.Label>
                 <Form.Control
                   type="number"
+                  className="input-sin-flechas"
                   value={duracion}
-                  onChange={(e) => setDuracion(Number(e.target.value))}
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    setDuracion(valor === "" ? "" : Math.max(1, Number(valor)));
+                  }}
                   required
                 />
               </Form.Group>
@@ -114,7 +143,7 @@ function CrearPrueba() {
 
               <div id="preguntas-container">
                 {preguntas.map((p, index) => (
-                  <Card key={index}>
+                  <Card key={index} className="mb-3">
                     <Card.Body>
                       <Card.Title>{p.enunciado}</Card.Title>
                       <ul>
@@ -135,12 +164,18 @@ function CrearPrueba() {
                 ))}
               </div>
 
-              <Button variant="primary" onClick={handleAgregarPregunta}>
-                Agregar Pregunta
-              </Button>
-              <Button variant="success" type="submit">
-                Crear Prueba
-              </Button>
+              <div className="botones-formulario">
+                <Button
+                  variant="primary"
+                  className="mr-2"
+                  onClick={handleAgregarPregunta}
+                >
+                  Agregar Pregunta
+                </Button>
+                <Button variant="success" type="submit">
+                  Crear Prueba
+                </Button>
+              </div>
             </Form>
           </Card.Body>
         </Card>
@@ -165,7 +200,6 @@ function CrearPrueba() {
               required
             />
           </Form.Group>
-
           <div id="opciones-container">
             {preguntaActual.opciones.map((o, index) => (
               <div
@@ -173,13 +207,28 @@ function CrearPrueba() {
                 onClick={() => handleSeleccionarRespuestaCorrecta(index)}
                 style={{
                   cursor: "pointer",
+                  padding: "5px",
+                  margin: "5px 0",
+                  backgroundColor:
+                    preguntaActual.respuestaCorrecta === index ? "#28a745" : "",
                   color:
                     preguntaActual.respuestaCorrecta === index
-                      ? "green"
+                      ? "white"
                       : "black",
+                  border: "1px solid #ddd",
+                  boxShadow:
+                    preguntaActual.respuestaCorrecta === index
+                      ? "0px 0px 10px rgba(0, 0, 0, 0.2)"
+                      : "",
+                  borderRadius: "4px",
                 }}
               >
                 {o}
+                {preguntaActual.respuestaCorrecta === index && (
+                  <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
+                    ✔
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -193,7 +242,12 @@ function CrearPrueba() {
             />
             <Button
               variant="secondary"
+              className="mr-3"
               onClick={() => {
+                if (opcion.trim() === "") {
+                  alert("No puedes agregar una opción vacía.");
+                  return;
+                }
                 setPreguntaActual({
                   ...preguntaActual,
                   opciones: [...preguntaActual.opciones, opcion],
@@ -203,11 +257,11 @@ function CrearPrueba() {
             >
               Agregar Opción
             </Button>
-          </Form.Group>
 
-          <Button variant="primary" onClick={handleGuardarPregunta}>
-            Guardar Pregunta
-          </Button>
+            <Button variant="primary" onClick={handleGuardarPregunta}>
+              Guardar Pregunta
+            </Button>
+          </Form.Group>
         </Modal.Body>
       </Modal>
     </>

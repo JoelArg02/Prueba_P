@@ -1,28 +1,41 @@
-/* Agrega esto en tu archivo CSS */
+.crear-prueba-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
 
-.card {
-    margin-top: 20px;
-    border-radius: 10px;
-  }
-  
-  .card-body {
-    padding: 20px;
-  }
-  
-  .modal-content {
-    border-radius: 10px;
-  }
-  
-  /* Estilo para las opciones */
-  #opciones-container div {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-  }
-  
-  #opciones-container div:hover {
-    background-color: #f8f9fa;
-  }
-  
+.preguntas-container .card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.botones-formulario {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.mr-2 {
+  margin-right: 16px;
+}
+
+.mr-3 {
+  margin-right: 16px;
+  margin-top: 5px;
+}
+
+.botones-formulario {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.input-sin-flechas::-webkit-outer-spin-button,
+.input-sin-flechas::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-sin-flechas {
+  -moz-appearance: textfield;
+
+}

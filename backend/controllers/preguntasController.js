@@ -35,3 +35,40 @@ exports.getPreguntaByIdPrueba = (req, res) => {
     return res.status(200).json(result.rows);
   });
 };
+
+exports.editPregunta = (req, res) => {
+  const id = req.params.id;
+  Preguntas.editPregunta(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al editar la pregunta." });
+    }
+    return res.status(200).json({ message: "Pregunta editada exitosamente." });
+  });
+};
+
+exports.deletePregunta = (req, res) => {
+  const id = req.params.id;
+  Preguntas.deletePregunta(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al eliminar la pregunta." });
+    }
+    return res
+      .status(200)
+      .json({ message: "Pregunta eliminada exitosamente." });
+  });
+};  
+
+exports.deletePruebaBolean = (req, res) => {
+  const id = req.params.id;
+  Preguntas.deletePruebaBolean(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al eliminar la pregunta." });
+    }
+    return res
+      .status(200)
+      .json({ message: "Pregunta eliminada exitosamente." });
+  });
+};

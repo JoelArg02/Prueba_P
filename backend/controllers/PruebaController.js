@@ -22,3 +22,36 @@ exports.createPrueba = (req, res) => {
     return res.status(201).json({ id_prueba: pruebaId });
   });
 };
+
+exports.editPrueba = (req, res) => {
+  const id = req.params.id;
+  Prueba.editPrueba(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al editar la prueba." });
+    }
+    return res.status(200).json({ message: "Prueba editada exitosamente." });
+  });
+};
+
+exports.deletePrueba = (req, res) => {
+  const id = req.params.id;
+  Prueba.deletePrueba(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al eliminar la prueba." });
+    }
+    return res.status(200).json({ message: "Prueba eliminada exitosamente." });
+  });
+};
+
+exports.deletePruebaBoolean = (req, res) => {
+  const id = req.params.id;
+  Prueba.deletePruebaBoolean(id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Error al eliminar la prueba." });
+    }
+    return res.status(200).json({ message: "Prueba eliminada exitosamente." });
+  });
+};

@@ -1,0 +1,16 @@
+.ver-pruebas-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .pregunta-card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .respuesta-correcta {
+    background-color: #d1e7dd;
+  }
+  
+  /* Ajustes adicionales de estilo según sea necesario */
+  

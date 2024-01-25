@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, ListGroup, Form } from "react-bootstrap";
 import { getPruebas } from "../../api/pruebas";
 import { getPreguntasById } from "../../api/preguntas";
+import "./index.css"; // Importindexlos personalizados
 
 function VerPruebas() {
   const [pruebas, setPruebas] = useState([]);
@@ -11,7 +12,8 @@ function VerPruebas() {
   useEffect(() => {
     getPruebas()
       .then((data) => {
-        setPruebas(data);
+        const pruebasActivas = data.filter((prueba) => prueba.activo);
+        setPruebas(pruebasActivas);
       })
       .catch((error) => {
         console.error(error);
@@ -36,9 +38,9 @@ function VerPruebas() {
   };
 
   return (
-    <div>
-      <h1>Pruebas Disponibles</h1>
-      <Form.Group>
+    <div className="ver-pruebas-container">
+      <h1 className="text-center">Pruebas Disponibles</h1>
+      <Form.Group className="mb-4">
         <Form.Label>Seleccionar Prueba:</Form.Label>
         <Form.Control
           as="select"
